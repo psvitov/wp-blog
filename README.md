@@ -103,6 +103,17 @@ ADMIN_USER=admin
 ADMIN_PASSWORD=123
 ADMIN_EMAIL=admin@example.com
 ```
+### Примечание: 
+Lля доступа по DNS-имени, прописанному в переменной URL, необходимо указывать реальный домен и настроить DNS-записи
+В случае локальной установки необходимо сделать DNS-запись на сервере, либо в файле hosts добавить строку в зависимости от используемой ОС:
+
+Windows XP, 2003, Vista, 7, 8, 10 — c:\windows\system32\drivers\etc\hosts
+Linux, Ubuntu, Unix, BSD — /etc/hosts
+macOS — /private/etc/hosts
+
+```
+<ip address> blog.example.com www.blog.example.com
+```
 В файле monitoring/metrics заменить данные в последней строке на актуальные:
 
 ```
