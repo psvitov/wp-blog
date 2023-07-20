@@ -167,7 +167,7 @@ terraform apply
 
 Для вывода метрик сервера необходимо настроить соединение Grafana и Prometheus, и подключить дашбоард метрик Node exporter
 
-- при первом входе в Grafana необходимо будет задать пароль
+- при первом входе в Grafana использовать логин `admin` и пароль `admin`, далее необходимо будет задать новый пароль
 - в разделе `Administrations - Data Source` нажать `Add new Data Source`, выбрать Prometheus, указать в строке URL: http://localhost:9090, сохранить и протестировать соединение
 - в разделе `Dashboard - New - Import` в строке Grafana ID указать 1860, нажать Load, выбрать подключенный сервер Prometheus в соответствующей строке, нажать Import
 
