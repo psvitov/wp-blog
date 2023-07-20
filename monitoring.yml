@@ -77,6 +77,7 @@
           path: "{{ item }}" 
           owner: prometheus
           group: prometheus
+          mode: u+rwx
         with_items:
           - /etc/prometheus/
           - /var/lib/prometheus/
@@ -133,6 +134,7 @@
           path: /usr/local/bin/node_exporter
           owner: nodeusr
           group: nodeusr
+          mode: u+rwx
 
       - name: Copy service files
         ansible.builtin.copy:
@@ -169,3 +171,9 @@
         ansible.builtin.yum:
           name: https://dl.grafana.com/oss/release/grafana-9.5.6-1.x86_64.rpm
           state: present
+
+      - name: Start Grafana
+        ansible.builtin.systemd:
+          name: grafana-server
+          state: started
+          enabled: true
