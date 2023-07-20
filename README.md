@@ -107,9 +107,9 @@ ADMIN_EMAIL=admin@example.com
 Lля доступа по DNS-имени, прописанному в переменной URL, необходимо указывать реальный домен и настроить DNS-записи
 В случае локальной установки необходимо сделать DNS-запись на сервере, либо в файле hosts добавить строку в зависимости от используемой ОС:
 
-Windows XP, 2003, Vista, 7, 8, 10 — c:\windows\system32\drivers\etc\hosts
-Linux, Ubuntu, Unix, BSD — /etc/hosts
-macOS — /private/etc/hosts
+- Windows XP, 2003, Vista, 7, 8, 10 — c:\windows\system32\drivers\etc\hosts
+- Linux, Ubuntu, Unix, BSD — /etc/hosts
+- macOS — /private/etc/hosts
 
 ```
 <ip address> blog.example.com www.blog.example.com
@@ -146,13 +146,33 @@ terraform apply
 
 # 4 этап: проверка установки
 
+Скриншот блога Wordpress:
 
+![0.png](https://github.com/psvitov/wp-blog/blob/main/0.png)
 
+Скриншот Prometheus
 
+![1.png](https://github.com/psvitov/wp-blog/blob/main/1.png)
 
+Скриншот Node Exporter
 
+![2.png](https://github.com/psvitov/wp-blog/blob/main/2.png)
 
+Скриншот Grafana
 
+![3.png](https://github.com/psvitov/wp-blog/blob/main/3.png)
+
+# 5 этап: дополнительная настройка Grafana
+
+Для вывода метрик сервера необходимо настроить соединение Grafana и Prometheu, и подключить дашбоард метрик Node exporter
+
+- при первом входе в Grafana необходимо будет задать пароль
+- в разделе `Administrations - Data Source` нажать `Add new Data Source`, выбрать Prometheus, указать в строке URL: http://localhost:9090, сохранить и протестировать соединение
+- в разделе `Dashboard - New - Import` в строке Grafana ID указать 1860, нажать Load, выбрать подключенный сервер Prometheus в соответствующей строке, нажать Import
+
+После добавления нового дашбоарда:
+
+![4.png](https://github.com/psvitov/wp-blog/blob/main/4.png)
 
 
 
