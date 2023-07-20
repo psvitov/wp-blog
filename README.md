@@ -79,8 +79,8 @@ git clone https://github.com/psvitov/wp-blog.git
 
  В файле variables.tf внести следующие данные:
 
- - `default = "OAuth key"` указать токен Yandex.Cloud
- - `default = "ID Yandex.Cloud"` указать идентификатор ключа доступа к Yandex.Cloud
+ - `default = "<OAuth key>"` указать токен Yandex.Cloud
+ - `default = "<ID Yandex.Cloud>"` указать идентификатор ключа доступа к Yandex.Cloud
 
 В файле wp/.env заменить данные на актуальные:
 
