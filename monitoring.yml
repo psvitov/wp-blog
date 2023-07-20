@@ -160,12 +160,12 @@
           state: restarted
           daemon_reload: true
 
-  - name: Install Grafana
+  - name: Installing Grafana
     hosts: wp-blog
     become: yes
     tasks:
 
-      - name: Install the nginx rpm from a remote repo
+      - name: Install RPM Packet
         ansible.builtin.yum:
           name: https://dl.grafana.com/oss/release/grafana-9.5.6-1.x86_64.rpm
           state: present
