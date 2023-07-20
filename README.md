@@ -165,7 +165,7 @@ terraform apply
 
 # 5 этап: дополнительная настройка Grafana
 
-Для вывода метрик сервера необходимо настроить соединение Grafana и Prometheu, и подключить дашбоард метрик Node exporter
+Для вывода метрик сервера необходимо настроить соединение Grafana и Prometheus, и подключить дашбоард метрик Node exporter
 
 - при первом входе в Grafana необходимо будет задать пароль
 - в разделе `Administrations - Data Source` нажать `Add new Data Source`, выбрать Prometheus, указать в строке URL: http://localhost:9090, сохранить и протестировать соединение
