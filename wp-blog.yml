@@ -1,0 +1,65 @@
+---
+  - name: Install Packages
+    hosts: wp-blog 
+    become: yes
+    tasks:
+    
+      - name: Upgrade all packages
+        ansible.builtin.yum:
+          name: '*'
+          state: latest
+
+      - name: Install packeges
+        ansible.builtin.yum:
+          name: 
+            - epel-release
+            - yum-utils
+          state: present
+
+      - name: Add Repo Docker
+        ansible.builtin.command:
+          cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+      - name: Install Docker packeges
+        ansible.builtin.yum:
+          name:
+            - docker-ce
+            - docker-ce-cli
+            - containerd.io
+            - docker-buildx-plugin
+            - docker-compose-plugin
+          state: present
+
+      - name: Start Docker
+        ansible.builtin.systemd:
+          name: docker
+          state: started
+          enabled: true
+
+  - name: Install Wordpress
+    hosts: wp-blog
+    become: yes
+    tasks:
+
+      - name: Create directory
+        ansible.builtin.file:
+          path: /opt/wp
+          state: directory
+          mode: '0755'
+
+      - name: Copy files
+        ansible.builtin.copy:
+          src: ./wp/
+          dest: /opt/wp
+
+      - name: Install WordPress
+        ansible.builtin.command:
+          cmd: "{{ item }}"
+        with_items:
+          - docker compose -f /opt/wp/docker-compose.yml up -d
+          - sleep 20
+
+      - name: Update settings
+        ansible.builtin.shell:
+          cmd: docker compose exec -T wp-cli sh < settings.sh
+          chdir: /opt/wp/

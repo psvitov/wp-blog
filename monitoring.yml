@@ -1,0 +1,171 @@
+---
+  - name: Install Prometheus
+    hosts: wp-blog
+    become: yes
+    tasks:
+
+      - name: Upgrade all packages
+        ansible.builtin.yum:
+          name: '*'
+          state: latest
+
+      - name: Install packeges
+        ansible.builtin.yum:
+          name:
+            - wget
+            - chrony
+          state: present
+
+      - name: Start Chrony
+        ansible.builtin.systemd:
+          name: chronyd
+          state: started
+          enabled: true
+
+      - name: Create directory
+        ansible.builtin.file:
+          path: "{{ item }}"
+          state: directory
+          mode: '0755'
+        with_items:
+          - /opt/monitoring
+          - /etc/prometheus
+          - /var/lib/prometheus
+
+      - name: Copy files
+        ansible.builtin.copy:
+          src: ./monitoring/
+          dest: /opt/monitoring
+
+      - name: Download Prometheus
+        ansible.builtin.get_url:
+          url: https://github.com/prometheus/prometheus/releases/download/v2.20.1/prometheus-2.20.1.linux-amd64.tar.gz
+          dest: /opt/monitoring/prometheus-2.20.1.linux-amd64.tar.gz
+
+      - name: Extract archive
+        ansible.builtin.unarchive:
+          src: /opt/monitoring/prometheus-2.20.1.linux-amd64.tar.gz
+          dest: /opt/monitoring/
+          remote_src: yes
+
+      - name: Copy files
+        ansible.builtin.copy:
+          src: "{{ item }}"
+          dest: /usr/local/bin/
+          remote_src: yes
+        with_items:
+          - /opt/monitoring/prometheus-2.20.1.linux-amd64/prometheus
+          - /opt/monitoring/prometheus-2.20.1.linux-amd64/promtool
+
+      - name: Copy files
+        ansible.builtin.copy:
+          src: "{{ item }}"
+          dest: /etc/prometheus
+          remote_src: yes
+        with_items:
+          - /opt/monitoring/prometheus-2.20.1.linux-amd64/console_libraries
+          - /opt/monitoring/prometheus-2.20.1.linux-amd64/consoles
+          - /opt/monitoring/prometheus-2.20.1.linux-amd64/prometheus.yml
+
+      - name: Create user
+        ansible.builtin.user:
+          name: prometheus
+          authorization: false
+
+      - name: Chown
+        ansible.builtin.file:
+          path: "{{ item }}" 
+          owner: prometheus
+          group: prometheus
+        with_items:
+          - /etc/prometheus/
+          - /var/lib/prometheus/
+          - /usr/local/bin/prometheus
+          - /usr/local/bin/promtool
+
+      - name: Copy service files
+        ansible.builtin.copy:
+          src: /opt/monitoring/prometheus.service
+          dest: /etc/systemd/system/
+          remote_src: yes
+
+      - name: Update systemd
+        ansible.builtin.shell:
+          cmd: systemctl daemon-reload
+
+      - name: Start prometheus
+        ansible.builtin.systemd:
+          name: prometheus
+          state: started
+          enabled: true
+
+  - name: Install Node exporter
+    hosts: wp-blog
+    become: yes
+    tasks:
+
+      - name: Download Node exporter
+        ansible.builtin.get_url:
+          url: https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
+          dest: /opt/monitoring/node_exporter-1.0.1.linux-amd64.tar.gz
+
+      - name: Extract archive
+        ansible.builtin.unarchive:
+          src: /opt/monitoring/node_exporter-1.0.1.linux-amd64.tar.gz
+          dest: /opt/monitoring/
+          remote_src: yes
+
+      - name: Copy files
+        ansible.builtin.copy:
+          src: "{{ item }}"
+          dest: /usr/local/bin/
+          remote_src: yes
+        with_items:
+          - /opt/monitoring/node_exporter-1.0.1.linux-amd64/node_exporter
+
+      - name: Create user
+        ansible.builtin.user:
+          name: nodeusr
+          authorization: false
+
+      - name: Chown
+        ansible.builtin.file:
+          path: /usr/local/bin/node_exporter
+          owner: nodeusr
+          group: nodeusr
+
+      - name: Copy service files
+        ansible.builtin.copy:
+          src: /opt/monitoring/node_exporter.service
+          dest: /etc/systemd/system/
+          remote_src: yes
+
+      - name: Update systemd
+        ansible.builtin.shell:
+          cmd: systemctl daemon-reload
+
+      - name: Start node exporter
+        ansible.builtin.systemd:
+          name: node_exporter
+          state: started
+          enabled: true
+
+      - name: Update prometheus.yml
+        ansible.builtin.shell:
+          cmd: cat /opt/monitoring/metrics >> /etc/prometheus/prometheus.yml
+
+      - name: Restart prometheus
+        ansible.builtin.systemd:
+          name: prometheus
+          state: restarted
+          daemon_reload: true
+
+  - name: Install Grafana
+    hosts: wp-blog
+    become: yes
+    tasks:
+
+      - name: Install the nginx rpm from a remote repo
+        ansible.builtin.yum:
+          name: https://dl.grafana.com/oss/release/grafana-9.5.6-1.x86_64.rpm
+          state: present
