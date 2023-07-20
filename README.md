@@ -148,19 +148,19 @@ terraform apply
 
 Скриншот блога Wordpress:
 
-![0.png](https://github.com/psvitov/wp-blog/blob/main/0.png)
+![0.png](https://github.com/psvitov/wp-blog/blob/main/images/0.png)
 
 Скриншот Prometheus
 
-![1.png](https://github.com/psvitov/wp-blog/blob/main/1.png)
+![1.png](https://github.com/psvitov/wp-blog/blob/main/images/1.png)
 
 Скриншот Node Exporter
 
-![2.png](https://github.com/psvitov/wp-blog/blob/main/2.png)
+![2.png](https://github.com/psvitov/wp-blog/blob/main/images/2.png)
 
 Скриншот Grafana
 
-![3.png](https://github.com/psvitov/wp-blog/blob/main/3.png)
+![3.png](https://github.com/psvitov/wp-blog/blob/main/images/3.png)
 
 # 5 этап: дополнительная настройка Grafana
 
@@ -172,7 +172,7 @@ terraform apply
 
 После добавления нового дашбоарда:
 
-![4.png](https://github.com/psvitov/wp-blog/blob/main/4.png)
+![4.png](https://github.com/psvitov/wp-blog/blob/main/images/4.png)
 
 ---
 
